@@ -9,9 +9,13 @@ app = typer.Typer()
 
 @app.callback(invoke_without_command=True)
 def glucose():
-    service = GlucoseService()
+    try:
+        service = GlucoseService()
+        reading = service.get_current_glucose()
+    except Exception as e:
+        console.print(f"[bold red]Error:[/] {e}")
+        raise typer.Exit(code=1) from e
 
-    reading = service.get_current_glucose()
     color = glucose_color(reading.value, reading.unit)
     
     console.print(f"[bold {color}]{reading.value} {reading.unit}[/]")
