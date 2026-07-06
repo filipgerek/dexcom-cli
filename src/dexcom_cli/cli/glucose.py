@@ -1,11 +1,10 @@
-import typer
+
 from dexcom_cli.services.glucose import GlucoseService
 
 from rich.console import Console
 
-app = typer.Typer()
 console = Console()
-@app.command()
+
 def glucose():
     service = GlucoseService()
 
