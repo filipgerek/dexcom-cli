@@ -1,10 +1,12 @@
+import typer
+from rich.console import Console
 
 from dexcom_cli.services.glucose import GlucoseService
 
-from rich.console import Console
-
 console = Console()
+app = typer.Typer()
 
+@app.callback(invoke_without_command=True)
 def glucose():
     service = GlucoseService()
 
