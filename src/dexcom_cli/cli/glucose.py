@@ -12,5 +12,5 @@ def glucose():
 
     reading = service.get_current_glucose()
     
-    console.print(f"[bold green]: {reading.value} {reading.unit}")
-    console.print(f"Updated at: {reading.timestamp}")
+    console.print(f"[bold green]{reading.value} {reading.unit}")
+    console.print(f"Updated at: {reading.timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
