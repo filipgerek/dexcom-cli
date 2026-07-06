@@ -1,5 +1,5 @@
 from dexcom_cli.models.glucose import GlucoseReading
-from dexcom_cli.providers.unofficial import PydexcomClient
+from dexcom_cli.clients import PydexcomClient
 
 import os
 from dotenv import load_dotenv
