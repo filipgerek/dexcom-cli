@@ -1,5 +1,6 @@
 import json
 import keyring
+from rich.console import Console
 
 SYSTEM_NAME = "dexcom_cli"
 SESSION_KEY = "session"
@@ -25,7 +26,7 @@ class Credentials:
     def load(cls) -> "Credentials":
         payload = keyring.get_password(SYSTEM_NAME, SESSION_KEY)
         if not payload:
-            raise RuntimeError(
+            raise Warning(
                 "No saved Dexcom session found. Run `dexcom login` first."
             )
 
