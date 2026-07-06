@@ -1,6 +1,6 @@
 from pydexcom import Dexcom
 
-from src.models.glucose import GlucoseReading
+from dexcom_cli.models.glucose import GlucoseReading
 
 class PydexcomClient:
     def __init__(self, username: str, password: str, region: str):

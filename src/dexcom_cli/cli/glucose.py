@@ -1,5 +1,5 @@
 import typer
-from src.services.glucose import GlucoseService
+from dexcom_cli.services.glucose import GlucoseService
 
 from rich.console import Console
 
