@@ -1,7 +1,7 @@
 [project]
 name = "dexcom-cli"
 version = "0.1.0"
-description = "Add your description here"
+description = "A CLI for working with Dexcom CGM data directly from your terminal."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
