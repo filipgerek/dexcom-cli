@@ -55,5 +55,5 @@ def history(
 
     history = service.get_history(minutes=minutes)
     for reading in history:
-        console.print(f"{reading.value} {reading.unit} at {reading.timestamp}")
+        console.print(f"{reading.value} {reading.unit} at {reading.timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
     
