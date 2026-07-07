@@ -8,8 +8,12 @@ console = Console()
 app = typer.Typer()
 
 DEFAULT_MINUTES = 60
+
 MIN_MINUTES = 1
 MAX_MINUTES = 1440
+
+MIN_HOURS = 1
+MAX_HOURS = 24
 
 Minutes = Annotated[int, typer.Option(
     "--minutes", 
@@ -20,9 +24,19 @@ Minutes = Annotated[int, typer.Option(
     show_default=True
 )]
 
+Hours = Annotated[int, typer.Option(
+    "--hours", 
+    "-H", 
+    help="Number of hours to get history for", 
+    min=MIN_HOURS, 
+    max=MAX_HOURS, 
+    show_default=True
+)]
+
 @app.callback(invoke_without_command=True)
 def history(
-    minutes: Minutes = DEFAULT_MINUTES,
+    minutes: Minutes = None,
+    hours: Hours = None,
 ):
     try:
         service = glucose_service()
@@ -30,6 +44,15 @@ def history(
         console.print(f"[bold red]Error:[/] {e}")
         raise typer.Exit(code=1) from e
     
+    if minutes is not None and hours is not None:
+        raise typer.BadParameter("Use either --minutes (-m) or --hours (-H), not both.")
+
+    if hours is not None:
+        minutes = hours * 60
+
+    elif minutes is None:
+        minutes = DEFAULT_MINUTES
+
     history = service.get_history(minutes=minutes)
     for reading in history:
         console.print(f"{reading.value} {reading.unit} at {reading.timestamp}")
