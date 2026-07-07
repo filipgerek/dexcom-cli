@@ -1,6 +1,7 @@
 import typer
 from rich.console import Console
 
+from dexcom_cli.config import DATETIME_FORMAT
 from dexcom_cli.services import glucose_service
 from dexcom_cli.utils import glucose_color
 
@@ -19,4 +20,4 @@ def glucose():
     color = glucose_color(reading.value, reading.unit)
     
     console.print(f"[bold {color}]{reading.value} {reading.unit}[/]")
-    console.print(f"Updated at: {reading.timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
+    console.print(f"Updated at: {reading.timestamp.strftime(DATETIME_FORMAT)}")
