@@ -1,6 +1,5 @@
 import typer
 from rich.console import Console
-from typing import Annotated
 
 from dexcom_cli.config import DATETIME_FORMAT
 from dexcom_cli.services import glucose_service
