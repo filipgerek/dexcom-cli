@@ -4,11 +4,10 @@ from typing import Annotated
 
 from dexcom_cli.config import DATETIME_FORMAT
 from dexcom_cli.services import glucose_service
+from dexcom_cli.utils import resolve_minutes
 
 console = Console()
 app = typer.Typer()
-
-DEFAULT_MINUTES = 60
 
 MIN_MINUTES = 1
 MAX_MINUTES = 1440
@@ -49,16 +48,10 @@ def history(
         console.print(f"[bold red]Error:[/] {e}")
         raise typer.Exit(code=1) from e
     
-    if minutes is not None and hours is not None:
-        raise typer.BadParameter("Use either --minutes (-m) or --hours (-H), not both.")
+    minutes = resolve_minutes(minutes, hours)
 
-    if hours is not None:
-        minutes = hours * 60
-
-    elif minutes is None:
-        minutes = DEFAULT_MINUTES
-
-    readings = service.get_history(minutes=minutes)
+    readings = service.get_history(minutes)
+    
     for reading in readings:
         console.print(f"{reading.value} {reading.unit} at {reading.timestamp.strftime(DATETIME_FORMAT)}")
     
