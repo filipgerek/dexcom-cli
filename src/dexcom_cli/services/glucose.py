@@ -6,3 +6,6 @@ class GlucoseService:
 
     def get_current_glucose(self) -> GlucoseReading:
         return self.client.current_glucose()
+
+    def get_history(self, minutes: int) -> list[GlucoseReading]:
+        return self.client.get_history(minutes)
