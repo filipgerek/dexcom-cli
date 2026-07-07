@@ -2,6 +2,7 @@ import typer
 from rich.console import Console
 from typing import Annotated
 
+from dexcom_cli.config import DATETIME_FORMAT
 from dexcom_cli.services import glucose_service
 
 console = Console()
@@ -15,23 +16,27 @@ MAX_MINUTES = 1440
 MIN_HOURS = 1
 MAX_HOURS = 24
 
-Minutes = Annotated[int, typer.Option(
-    "--minutes", 
-    "-m", 
-    help="Number of minutes to get history for", 
-    min=MIN_MINUTES, 
-    max=MAX_MINUTES, 
-    show_default=True
-)]
+Minutes = Annotated[int | None, 
+    typer.Option(
+        "--minutes", 
+        "-m", 
+        help="Number of minutes to get history for", 
+        min=MIN_MINUTES, 
+        max=MAX_MINUTES, 
+        show_default=True
+    )
+]
 
-Hours = Annotated[int, typer.Option(
-    "--hours", 
-    "-H", 
-    help="Number of hours to get history for", 
-    min=MIN_HOURS, 
-    max=MAX_HOURS, 
-    show_default=True
-)]
+Hours = Annotated[int | None, 
+    typer.Option(
+        "--hours", 
+        "-H", 
+        help="Number of hours to get history for", 
+        min=MIN_HOURS, 
+        max=MAX_HOURS, 
+        show_default=True
+    )
+]
 
 @app.callback(invoke_without_command=True)
 def history(
@@ -53,7 +58,7 @@ def history(
     elif minutes is None:
         minutes = DEFAULT_MINUTES
 
-    history = service.get_history(minutes=minutes)
-    for reading in history:
-        console.print(f"{reading.value} {reading.unit} at {reading.timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
+    readings = service.get_history(minutes=minutes)
+    for reading in readings:
+        console.print(f"{reading.value} {reading.unit} at {reading.timestamp.strftime(DATETIME_FORMAT)}")
     
