@@ -30,3 +30,6 @@ class PydexcomClient:
             )
             for reading in readings
         ]
+    
+    def get_account_id(self) -> str | None:
+        return self.dexcom.account_id
