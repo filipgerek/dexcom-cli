@@ -12,9 +12,9 @@ app = typer.Typer()
 def status():
     credentials = Credentials.load()
     service = glucose_service()
-    account_id = service.get_account_id()
     region = parse_region(credentials.region)
     if credentials:
+        account_id = service.get_account_id()
         console.print(f"[bold green]Logged in[/]")
         console.print(f"Username: [bold blue]{credentials.username}[/]")
         console.print(f"Account ID: [bold blue]{account_id}[/]")
