@@ -1,8 +1,7 @@
 import typer
 from rich.console import Console
-
-from dexcom_cli.auth import Credentials
-from dexcom_cli.utils import parse_region
+from dexcom_cli.utils.parse_region import parse_region
+from dexcom_cli.auth import Credentials, Session
 
 console = Console()
 app = typer.Typer()
@@ -10,10 +9,14 @@ app = typer.Typer()
 @app.callback(invoke_without_command=True)
 def status():
     credentials = Credentials.load()
-    region = parse_region(credentials.region)
-    if credentials:
-        console.print(f"[bold green]Logged in[/]")
-        console.print(f"Username: [bold blue]{credentials.username}[/]")
-        console.print(f"Region: [bold blue]{region}[/]")
-    else:
+
+    if credentials is None:
         console.print(f"[bold orange]Not logged in[/]")
+        raise typer.Exit()
+
+    client = Session().create_client()
+    account_id = client.get_account_id()
+    console.print(f"[bold green]Logged in[/]")
+    console.print(f"Username: [bold blue]{credentials.username}[/]")
+    console.print(f"Account ID: [bold blue]{account_id}[/]")
+    console.print(f"Region: [bold blue]{parse_region(credentials.region)}[/]")

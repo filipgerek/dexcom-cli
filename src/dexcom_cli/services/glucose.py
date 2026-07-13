@@ -9,3 +9,6 @@ class GlucoseService:
 
     def get_history(self, minutes: int) -> list[GlucoseReading]:
         return self.client.get_history(minutes)
+    
+    def get_account_id(self) -> str | None:
+        return self.client.get_account_id()

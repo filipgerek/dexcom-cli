@@ -1,17 +1,14 @@
+from __future__ import annotations
+
 import json
 import keyring
-from rich.console import Console
+from dexcom_cli.models.credentials import Credentials as CredentialsModel
 
 SYSTEM_NAME = "dexcom_cli"
 SESSION_KEY = "session"
 
 
-class Credentials:
-    def __init__(self, username: str, password: str, region: str):
-        self.username = username
-        self.password = password
-        self.region = region
-
+class Credentials(CredentialsModel):
     def save(self) -> None:
         payload = json.dumps(
             {
@@ -23,13 +20,12 @@ class Credentials:
         keyring.set_password(SYSTEM_NAME, SESSION_KEY, payload)
 
     @classmethod
-    def load(cls) -> "Credentials":
+    def load(cls) -> Credentials | None:
         payload = keyring.get_password(SYSTEM_NAME, SESSION_KEY)
+        
         if not payload:
-            raise Warning(
-                "No saved Dexcom session found. Run `dexcom login` first."
-            )
-
+            return None
+        
         data = json.loads(payload)
         return cls(
             username=data["username"],
