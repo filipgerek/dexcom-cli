@@ -6,6 +6,8 @@ from rich.text import Text
 from dexcom_cli.config import DATETIME_FORMAT, REFRESH_INTERVAL
 from dexcom_cli.services import glucose_service
 from dexcom_cli.utils import glucose_color
+from dexcom_cli.notifications import play
+from dexcom_cli.utils import resolve_sound
 
 console = Console()
 app = typer.Typer()
@@ -29,6 +31,11 @@ def watch():
                     )
                 )
                 last_timestamp = reading.timestamp
+
+                # Play sound logic
+                sound = resolve_sound(reading)
+                if sound:
+                    play(sound)
 
             time.sleep(REFRESH_INTERVAL)
     except KeyboardInterrupt:

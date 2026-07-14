@@ -1,6 +1,7 @@
-from .constants import DATETIME_FORMAT, REFRESH_INTERVAL
+from .constants import DATETIME_FORMAT, REFRESH_INTERVAL, SOUND_PATH
 
 __all__ = [
     "DATETIME_FORMAT",
     "REFRESH_INTERVAL",
+    "SOUND_PATH",
 ]
