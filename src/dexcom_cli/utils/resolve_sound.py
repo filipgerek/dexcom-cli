@@ -1,6 +1,5 @@
 from dexcom_cli.models.sound import Sound
 from dexcom_cli.models.glucose import GlucoseReading
-from dexcom_cli.config import SOUND_PATH
 
 HYPO_SOUND = Sound.SUBMARINE
 HYPER_SOUND = Sound.GLASS
@@ -11,5 +10,5 @@ def resolve_sound(reading: GlucoseReading) -> Sound | None:
 
     elif reading.value > 7.8 :
         return HYPER_SOUND
-        
+
     return None
