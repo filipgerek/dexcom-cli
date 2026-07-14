@@ -16,11 +16,18 @@ def watch():
     try:
         service = glucose_service()
         console.print("[bold yellow]Watching...[/]")
+
+        last_timestamp = None
+
         with Live(Text(""), console=console, refresh_per_second=10) as live:
             while True:
                 reading = service.get_current_glucose()
-                live.update(Text(f"{reading.value} {reading.unit} {reading.trend.arrow} {reading.timestamp.strftime(DATETIME_FORMAT)}", style=f"bold {glucose_color(reading.value, reading.unit)}"))
-                time.sleep(1)
+                if last_timestamp != reading.timestamp:
+                    live.update(Text(f"{reading.value} {reading.unit} {reading.trend.arrow} {reading.timestamp.strftime(DATETIME_FORMAT)}", style=f"bold {glucose_color(reading.value, reading.unit)}"))
+                    last_timestamp = reading.timestamp
+
+                time.sleep(30)
+
     except KeyboardInterrupt as e:
         console.print(f"[bold yellow]Stopping...[/]")
         raise typer.Exit(code=0) from e
