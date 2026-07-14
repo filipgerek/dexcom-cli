@@ -4,7 +4,7 @@ from rich.console import Console
 from rich.live import Live
 from rich.text import Text
 
-from dexcom_cli.config import DATETIME_FORMAT
+from dexcom_cli.config import DATETIME_FORMAT, REFRESH_INTERVAL
 from dexcom_cli.services import glucose_service
 from dexcom_cli.utils import glucose_color
 
@@ -26,7 +26,7 @@ def watch():
                     live.update(Text(f"{reading.value} {reading.unit} {reading.trend.arrow} {reading.timestamp.strftime(DATETIME_FORMAT)}", style=f"bold {glucose_color(reading.value, reading.unit)}"))
                     last_timestamp = reading.timestamp
 
-                time.sleep(30)
+                time.sleep(REFRESH_INTERVAL)
 
     except KeyboardInterrupt:
         console.print(f"[bold yellow]Stopping...[/]")
