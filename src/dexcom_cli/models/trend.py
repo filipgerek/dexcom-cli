@@ -1,4 +1,5 @@
 from enum import Enum
+from pydexcom.const import DEXCOM_TREND_DIRECTIONS, TREND_ARROWS
 
 class Trend(str, Enum):
     DOUBLE_UP = "DoubleUp"
@@ -11,3 +12,7 @@ class Trend(str, Enum):
     NOT_COMPUTABLE = "NotComputable"
     RATE_OUT_OF_RANGE = "RateOutOfRange"
     NONE = "None"
+
+    @property
+    def arrow(self) -> str:
+        return TREND_ARROWS[DEXCOM_TREND_DIRECTIONS[self.value]]
