@@ -22,8 +22,16 @@ def watch():
         with Live(Text(""), console=console, refresh_per_second=10) as live:
             while True:
                 reading = service.get_current_glucose()
+
+                output = (
+                    f"{reading.value} "
+                    f"{reading.unit} "
+                    f"{reading.trend.arrow} "
+                    f"{reading.timestamp.strftime(DATETIME_FORMAT)}"
+                )
+
                 if last_timestamp != reading.timestamp:
-                    live.update(Text(f"{reading.value} {reading.unit} {reading.trend.arrow} {reading.timestamp.strftime(DATETIME_FORMAT)}", style=f"bold {glucose_color(reading.value, reading.unit)}"))
+                    live.update(Text(output, style=f"bold {glucose_color(reading.value, reading.unit)}"))
                     last_timestamp = reading.timestamp
 
                 time.sleep(REFRESH_INTERVAL)
