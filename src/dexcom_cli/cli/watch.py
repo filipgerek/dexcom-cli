@@ -34,3 +34,6 @@ def watch():
     except KeyboardInterrupt:
         console.print("[bold yellow]Stopping...[/]")
         raise typer.Exit()
+    except Exception as e:
+        console.print(f"[bold red]Error:[/] {e}")
+        raise typer.Exit() from e
