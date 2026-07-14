@@ -19,7 +19,7 @@ def watch():
         with Live(Text(""), console=console, refresh_per_second=10) as live:
             while True:
                 reading = service.get_current_glucose()
-                live.update(Text(f"{reading.value} {reading.unit} {reading.timestamp.strftime(DATETIME_FORMAT)}", style=f"bold {glucose_color(reading.value, reading.unit)}"))
+                live.update(Text(f"{reading.value} {reading.unit} {reading.trend.arrow} {reading.timestamp.strftime(DATETIME_FORMAT)}", style=f"bold {glucose_color(reading.value, reading.unit)}"))
                 time.sleep(1)
     except KeyboardInterrupt as e:
         console.print(f"[bold yellow]Stopping...[/]")
