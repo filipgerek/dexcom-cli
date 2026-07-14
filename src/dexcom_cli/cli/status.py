@@ -6,7 +6,7 @@ from dexcom_cli.auth import Credentials, Session
 console = Console()
 app = typer.Typer()
 
-@app.callback(invoke_without_command=True)
+@app.callback(invoke_without_command=True, help="Show the current status of the session (username, account ID, region).")
 def status():
     credentials = Credentials.load()
 

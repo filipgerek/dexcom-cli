@@ -6,7 +6,7 @@ from dexcom_cli.auth import Credentials
 console = Console()
 app = typer.Typer()
 
-@app.callback(invoke_without_command=True)
+@app.callback(invoke_without_command=True, help="Logout from Dexcom.")
 def logout():
     credentials = Credentials.load()
     credentials.delete()
