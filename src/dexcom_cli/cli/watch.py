@@ -1,7 +1,6 @@
 import time
 import typer
 from rich.console import Console
-from rich.live import Live
 from rich.text import Text
 
 from dexcom_cli.config import DATETIME_FORMAT, REFRESH_INTERVAL
@@ -19,23 +18,19 @@ def watch():
 
         last_timestamp = None
 
-        with Live(Text(""), console=console, refresh_per_second=10) as live:
-            while True:
-                reading = service.get_current_glucose()
+        while True:
+            reading = service.get_current_glucose()
 
-                output = (
-                    f"{reading.value} "
-                    f"{reading.unit} "
-                    f"{reading.trend.arrow} "
-                    f"{reading.timestamp.strftime(DATETIME_FORMAT)}"
+            if last_timestamp != reading.timestamp:
+                console.print(
+                    Text(
+                        f"{reading.value} {reading.unit} {reading.trend.arrow} {reading.timestamp.strftime(DATETIME_FORMAT)}",
+                        style=f"bold {glucose_color(reading.value, reading.unit)}"
+                    )
                 )
+                last_timestamp = reading.timestamp
 
-                if last_timestamp != reading.timestamp:
-                    live.update(Text(output, style=f"bold {glucose_color(reading.value, reading.unit)}"))
-                    last_timestamp = reading.timestamp
-
-                time.sleep(REFRESH_INTERVAL)
-
+            time.sleep(REFRESH_INTERVAL)
     except KeyboardInterrupt:
         console.print(f"[bold yellow]Stopping...[/]")
         raise typer.Exit()
