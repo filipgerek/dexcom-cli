@@ -1,4 +1,6 @@
 import typer
+from dexcom_cli.models.region import Region
+import questionary
 from rich.console import Console
 
 from dexcom_cli.auth import Credentials
@@ -9,8 +11,10 @@ app = typer.Typer()
 @app.callback(invoke_without_command=True)
 def login():
     username = typer.prompt("Dexcom username")
-    password = typer.prompt("Dexcom password", hide_input=True)
-    region = typer.prompt("Dexcom region", default="us", show_default=True)
+    password = typer.prompt("Enter password", hide_input=True)
+    region = questionary.select("Select region", choices=[
+        questionary.Choice(f"{region.value.upper()} {region.label}", value=region.value) for region in Region
+    ]).ask()
 
     credentials = Credentials(username=username, password=password, region=region)
 
