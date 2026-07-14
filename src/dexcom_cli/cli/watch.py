@@ -32,5 +32,5 @@ def watch():
 
             time.sleep(REFRESH_INTERVAL)
     except KeyboardInterrupt:
-        console.print(f"[bold yellow]Stopping...[/]")
+        console.print("[bold yellow]Stopping...[/]")
         raise typer.Exit()
