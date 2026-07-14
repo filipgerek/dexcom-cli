@@ -1,6 +1,6 @@
+from dexcom_cli.models.region import Region
 import typer
 from rich.console import Console
-from dexcom_cli.utils.parse_region import parse_region
 from dexcom_cli.auth import Credentials, Session
 
 console = Console()
@@ -19,4 +19,4 @@ def status():
     console.print(f"[bold green]Logged in[/]")
     console.print(f"Username: [bold blue]{credentials.username}[/]")
     console.print(f"Account ID: [bold blue]{account_id}[/]")
-    console.print(f"Region: [bold blue]{parse_region(credentials.region)}[/]")
+    console.print(f"Region: [bold blue]{Region(credentials.region).value.upper()} ({Region(credentials.region).label})[/]")
