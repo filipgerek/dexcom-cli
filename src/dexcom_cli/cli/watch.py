@@ -28,6 +28,6 @@ def watch():
 
                 time.sleep(30)
 
-    except KeyboardInterrupt as e:
+    except KeyboardInterrupt:
         console.print(f"[bold yellow]Stopping...[/]")
-        raise typer.Exit(code=0) from e
+        raise typer.Exit()
