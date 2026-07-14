@@ -9,7 +9,7 @@ from dexcom_cli.cli import Minutes, Hours
 console = Console()
 app = typer.Typer()
 
-@app.callback(invoke_without_command=True)
+@app.callback(invoke_without_command=True, help="Show the history of glucose readings for the last day.")
 def history(
     minutes: Minutes = None,
     hours: Hours = None,

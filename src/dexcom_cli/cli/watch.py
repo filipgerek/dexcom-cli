@@ -12,7 +12,7 @@ from dexcom_cli.utils import resolve_sound
 console = Console()
 app = typer.Typer()
 
-@app.callback(invoke_without_command=True)
+@app.callback(invoke_without_command=True, help="Watch function for glucose readings updated every 5 minutes, plays a sound when the glucose reading hits a threshold (hypo or hyper).")
 def watch():
     try:
         service = glucose_service()

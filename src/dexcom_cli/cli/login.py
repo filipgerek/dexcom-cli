@@ -8,7 +8,7 @@ from dexcom_cli.clients import PydexcomClient
 console = Console()
 app = typer.Typer()
 
-@app.callback(invoke_without_command=True)
+@app.callback(invoke_without_command=True, help="Login to Dexcom.")
 def login():
     username = typer.prompt("Dexcom username")
     password = typer.prompt("Enter password", hide_input=True)

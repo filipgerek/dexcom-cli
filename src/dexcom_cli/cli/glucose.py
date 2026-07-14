@@ -8,7 +8,7 @@ from dexcom_cli.utils import glucose_color
 console = Console()
 app = typer.Typer()
 
-@app.callback(invoke_without_command=True)
+@app.callback(invoke_without_command=True, help="Get the current glucose reading.")
 def glucose():
     try:
         service = glucose_service()
