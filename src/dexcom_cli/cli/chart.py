@@ -32,11 +32,16 @@ def chart(
     timestamps = [reading.timestamp.strftime("%H:%M") for reading in readings]
     values = [reading.value for reading in readings]
     unit = readings[0].unit
+    terminal_width, terminal_height = plt.terminal_size()
+    plot_width = max(10, terminal_width - 14)
+    plot_height = max(8, terminal_height - 9)
+    tick_step = max(1, len(readings) // max(1, plot_width // 8))
 
     plt.clear_figure()
+    plt.plot_size(plot_width, plot_height)
     plt.title(f"Glucose readings - last {minutes} minutes")
     plt.xlabel("Time")
     plt.ylabel(unit)
-    plt.xticks(x_values, timestamps)
+    plt.xticks(x_values[::tick_step], timestamps[::tick_step])
     plt.plot(x_values, values, marker="dot")
     plt.show()
