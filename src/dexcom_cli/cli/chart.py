@@ -4,7 +4,7 @@ from rich.console import Console
 
 from dexcom_cli.cli import Hours, Minutes
 from dexcom_cli.services import glucose_service
-from dexcom_cli.utils import resolve_minutes
+from dexcom_cli.utils import oldest_first, resolve_minutes
 
 console = Console()
 app = typer.Typer()
@@ -28,10 +28,11 @@ def chart(
         console.print("[bold yellow]No glucose readings found.[/]")
         raise typer.Exit()
 
-    x_values = list(range(len(readings)))
-    timestamps = [reading.timestamp.strftime("%H:%M") for reading in readings]
-    values = [reading.value for reading in readings]
-    unit = readings[0].unit
+    ordered_readings = oldest_first(readings)
+    x_values = list(range(len(ordered_readings)))
+    timestamps = [reading.timestamp.strftime("%H:%M") for reading in ordered_readings]
+    values = [reading.value for reading in ordered_readings]
+    unit = ordered_readings[0].unit
     terminal_width, terminal_height = plt.terminal_size()
     plot_width = max(10, terminal_width - 14)
     plot_height = max(8, terminal_height - 9)
