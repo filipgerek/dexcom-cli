@@ -44,5 +44,7 @@ def chart(
     plt.xlabel("Time")
     plt.ylabel(unit)
     plt.xticks(x_values[::tick_step], timestamps[::tick_step])
+    plt.hline(3.9, color="red")
+    plt.hline(7.8, color="orange")
     plt.plot(x_values, values, marker="dot")
     plt.show()
