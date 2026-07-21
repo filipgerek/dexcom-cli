@@ -36,3 +36,13 @@ Simple = Annotated[bool,
         help="Show only glucose measurement and time.",
     )
 ]
+
+WatchCount = Annotated[int | None,
+    typer.Option(
+        "--count",
+        "-c",
+        help="Stop watching after this many new measurements.",
+        min=1,
+        show_default=False,
+    )
+]
