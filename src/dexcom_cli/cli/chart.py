@@ -11,6 +11,7 @@ app = typer.Typer()
 
 MAX_WIDTH = 90
 MAX_HEIGHT = 18
+LINE_STEPS = 8
 
 
 @app.callback(invoke_without_command=True, help="Display glucose readings as a terminal chart.")
@@ -36,6 +37,20 @@ def chart(
     timestamps = [reading.timestamp.strftime("%H:%M") for reading in ordered_readings]
     values = [reading.value for reading in ordered_readings]
     unit = ordered_readings[0].unit
+    line_x_values = []
+    line_values = []
+
+    for index, value in enumerate(values[:-1]):
+        next_value = values[index + 1]
+
+        for step in range(LINE_STEPS):
+            ratio = step / LINE_STEPS
+            line_x_values.append(index + ratio)
+            line_values.append(value + (next_value - value) * ratio)
+
+    line_x_values.append(x_values[-1])
+    line_values.append(values[-1])
+
     terminal_width, terminal_height = plt.terminal_size()
     plot_width = max(10, min(MAX_WIDTH, terminal_width - 14))
     plot_height = max(6, min(MAX_HEIGHT, terminal_height - 13))
@@ -49,5 +64,6 @@ def chart(
     plt.xticks(x_values[::tick_step], timestamps[::tick_step])
     plt.hline(3.9, color="red")
     plt.hline(7.8, color="orange")
-    plt.plot(x_values, values, marker="dot")
+    plt.plot(line_x_values, line_values, marker="braille", color="blue")
+    plt.scatter(x_values, values, marker="●", color="green")
     plt.show()
