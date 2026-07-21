@@ -9,6 +9,9 @@ from dexcom_cli.utils import oldest_first, resolve_minutes
 console = Console()
 app = typer.Typer()
 
+MAX_WIDTH = 90
+MAX_HEIGHT = 18
+
 
 @app.callback(invoke_without_command=True, help="Display glucose readings as a terminal chart.")
 def chart(
@@ -34,8 +37,8 @@ def chart(
     values = [reading.value for reading in ordered_readings]
     unit = ordered_readings[0].unit
     terminal_width, terminal_height = plt.terminal_size()
-    plot_width = max(10, terminal_width - 14)
-    plot_height = max(8, terminal_height - 9)
+    plot_width = max(10, min(MAX_WIDTH, terminal_width - 14))
+    plot_height = max(6, min(MAX_HEIGHT, terminal_height - 13))
     tick_step = max(1, len(readings) // max(1, plot_width // 8))
 
     plt.clear_figure()
