@@ -1,0 +1,69 @@
+import plotext as plt
+import typer
+from rich.console import Console
+
+from dexcom_cli.cli import Hours, Minutes
+from dexcom_cli.services import glucose_service
+from dexcom_cli.utils import oldest_first, resolve_minutes
+
+console = Console()
+app = typer.Typer()
+
+MAX_WIDTH = 90
+MAX_HEIGHT = 18
+LINE_STEPS = 8
+
+
+@app.callback(invoke_without_command=True, help="Display glucose readings as a terminal chart.")
+def chart(
+    minutes: Minutes = None,
+    hours: Hours = None,
+):
+    minutes = resolve_minutes(minutes, hours)
+
+    try:
+        service = glucose_service()
+        readings = service.get_history(minutes)
+    except Exception as e:
+        console.print(f"[bold red]Error:[/] {e}")
+        raise typer.Exit(code=1) from e
+
+    if not readings:
+        console.print("[bold yellow]No glucose readings found.[/]")
+        raise typer.Exit()
+
+    ordered_readings = oldest_first(readings)
+    x_values = list(range(len(ordered_readings)))
+    timestamps = [reading.timestamp.strftime("%H:%M") for reading in ordered_readings]
+    values = [reading.value for reading in ordered_readings]
+    unit = ordered_readings[0].unit
+    line_x_values = []
+    line_values = []
+
+    for index, value in enumerate(values[:-1]):
+        next_value = values[index + 1]
+
+        for step in range(LINE_STEPS):
+            ratio = step / LINE_STEPS
+            line_x_values.append(index + ratio)
+            line_values.append(value + (next_value - value) * ratio)
+
+    line_x_values.append(x_values[-1])
+    line_values.append(values[-1])
+
+    terminal_width, terminal_height = plt.terminal_size()
+    plot_width = max(10, min(MAX_WIDTH, terminal_width - 14))
+    plot_height = max(6, min(MAX_HEIGHT, terminal_height - 13))
+    tick_step = max(1, len(readings) // max(1, plot_width // 8))
+
+    plt.clear_figure()
+    plt.plot_size(plot_width, plot_height)
+    plt.title(f"Glucose readings - last {minutes} minutes")
+    plt.xlabel("Time")
+    plt.ylabel(unit)
+    plt.xticks(x_values[::tick_step], timestamps[::tick_step])
+    plt.hline(3.9, color="red")
+    plt.hline(7.8, color="orange")
+    plt.plot(line_x_values, line_values, marker="braille", color="blue")
+    plt.scatter(x_values, values, marker="●", color="green")
+    plt.show()
