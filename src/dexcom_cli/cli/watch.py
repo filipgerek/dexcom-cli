@@ -23,6 +23,7 @@ def watch(
         console.print("[bold yellow]Watching...[/]")
 
         last_timestamp = None
+        last_value = None
         measurement_count = 0
 
         while True:
@@ -31,10 +32,11 @@ def watch(
             if last_timestamp != reading.timestamp:
                 measurement_count += 1
                 count_prefix = f"{measurement_count}/{count} " if count is not None else ""
+                delta_text = "(--)" if last_value is None else f"({reading.value - last_value:+g})"
                 reading_text = (
-                    f"{reading.value} {reading.unit} {reading.timestamp.strftime('%H:%M')} {count_prefix}"
+                    f"{count_prefix}{reading.value} {reading.unit} {delta_text} {reading.timestamp.strftime('%H:%M')}"
                     if simple
-                    else f"{count_prefix}{reading.value} {reading.unit} {reading.trend.arrow} {reading.timestamp.strftime(DATETIME_FORMAT)}"
+                    else f"{count_prefix}{reading.value} {reading.unit} {delta_text} {reading.timestamp.strftime(DATETIME_FORMAT)}"
                 )
 
                 console.print(
@@ -44,6 +46,7 @@ def watch(
                     )
                 )
                 last_timestamp = reading.timestamp
+                last_value = reading.value
 
                 # Play sound logic
                 sound = resolve_sound(reading)
