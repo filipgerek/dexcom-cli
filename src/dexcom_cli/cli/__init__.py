@@ -1,6 +1,7 @@
-from .options import Minutes, Hours
+from .options import Minutes, Hours, Simple
 
 __all__ = [
     "Minutes",
     "Hours",
+    "Simple",
 ]

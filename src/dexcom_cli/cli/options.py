@@ -28,3 +28,11 @@ Hours = Annotated[int | None,
         show_default=True
     )
 ]
+
+Simple = Annotated[bool,
+    typer.Option(
+        "--simple",
+        "-s",
+        help="Show only glucose measurement and time.",
+    )
+]

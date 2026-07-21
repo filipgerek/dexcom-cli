@@ -8,12 +8,15 @@ from dexcom_cli.services import glucose_service
 from dexcom_cli.utils import glucose_color
 from dexcom_cli.notifications import play
 from dexcom_cli.utils import resolve_sound
+from dexcom_cli.cli import Simple
 
 console = Console()
 app = typer.Typer()
 
 @app.callback(invoke_without_command=True, help="Watch function for glucose readings updated every 5 minutes, plays a sound when the glucose reading hits a threshold (hypo or hyper).")
-def watch():
+def watch(
+    simple: Simple = False,
+):
     try:
         service = glucose_service()
         console.print("[bold yellow]Watching...[/]")
@@ -24,9 +27,15 @@ def watch():
             reading = service.get_current_glucose()
 
             if last_timestamp != reading.timestamp:
+                reading_text = (
+                    f"{reading.value} {reading.unit} {reading.timestamp.strftime('%H:%M')}"
+                    if simple
+                    else f"{reading.value} {reading.unit} {reading.trend.arrow} {reading.timestamp.strftime(DATETIME_FORMAT)}"
+                )
+
                 console.print(
                     Text(
-                        f"{reading.value} {reading.unit} {reading.trend.arrow} {reading.timestamp.strftime(DATETIME_FORMAT)}",
+                        reading_text,
                         style=f"bold {glucose_color(reading.value, reading.unit)}"
                     )
                 )
